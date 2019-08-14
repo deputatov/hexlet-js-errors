@@ -1,8 +1,8 @@
 class Tree {
   constructor(key, meta, parent) {
+    this.parent = parent;
     this.key = key;
     this.meta = meta;
-    this.parent = parent;
     this.children = new Map();
   }
 
@@ -17,15 +17,17 @@ class Tree {
   addChild(key, meta) {
     const child = new Tree(key, meta, this);
     this.children.set(key, child);
+
     return child;
   }
 
   getChild(key) {
     return this.children.get(key);
   }
-  // BEGIN
+
+  // BEGIN (write your solution here)
   hasChildren() {
-    return this.children.size !== 0;
+    return this.children.size > 0;
   }
 
   hasChild(key) {
@@ -40,21 +42,19 @@ class Tree {
     return this.children.delete(key);
   }
 
-  getDeepChild(keys = []) {
-    if (!keys) {
-      return undefined;
-    }
-    const [head, ...tail] = keys;
-    return tail.reduce((node, key) => {
-      if (node !== undefined && node.hasChild(key)) {
-        return node.getChild(key);
-      }
-      return undefined;
-    }, this.getChild(head))
-  }
-
   getChildren() {
     return [...this.children.values()];
   }
+
+  getDeepChild(keys) {
+    const [key, ...rest] = keys;
+    const node = this.getChild(key);
+    if (!node || rest.length === 0) {
+      return node;
+    }
+    return node.getDeepChild(rest);
+  }
   // END
 }
+
+export default Tree;
