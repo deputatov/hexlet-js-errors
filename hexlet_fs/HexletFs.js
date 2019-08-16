@@ -2,7 +2,7 @@ import path from 'path';
 import Tree from '@hexlet/trees';
 
 // BEGIN (write your solution here)
-const getPathParts = filepath => path.normalize(filepath).split(path.sep).filter(n => n);
+const getPathParts = filepath => filepath.split(path.sep).filter(n => n);
 // END
 
 export default class {
@@ -12,29 +12,31 @@ export default class {
 
   // BEGIN (write your solution here)
   isDirectory(filepath) {
-    const node = this.findNode(filepath);
-    return node !== undefined ? node.meta.type === 'dir' : false;
+    const current = this.findNode(filepath);
+    return !!current && current.getMeta().type === 'dir';
   }
 
   isFile(filepath) {
-    const node = this.findNode(filepath);
-    return node !== undefined ? node.meta.type === 'file' : false;
+    const current = this.findNode(filepath);
+    return !!current && current.getMeta().type === 'file';
   }
 
   mkdirSync(filepath) {
-    const pathElements = path.parse(filepath);
-    if (this.isDirectory(pathElements.dir)) {
-      const subtree = this.findNode(pathElements.dir);
-      subtree.addChild(pathElements.base, { type: 'dir' });
+    const { dir, base } = path.parse(filepath);
+    if (!this.isDirectory(dir)) {
+      return false;
     }
+    const parent = this.findNode(dir);
+    return parent.addChild(base, { type: 'dir' });
   }
 
   touchSync(filepath) {
-    const pathElements = path.parse(filepath);
-    if (this.isDirectory(pathElements.dir)) {
-      const subtree = this.findNode(pathElements.dir);
-      subtree.addChild(pathElements.base, { type: 'file' });
+    const { dir, base } = path.parse(filepath);
+    if (!this.isDirectory(dir)) {
+      return false;
     }
+    const current = this.findNode(dir);
+    return current.addChild(base, { type: 'file' });
   }
   // END
 
