@@ -5,8 +5,7 @@ import { Dir, File } from '@hexlet/fs'; // eslint-disable-line
 
 import HexletFsError from './HexletFsError';
 
-const getPathParts = filepath =>
-  filepath.split(path.sep).filter(part => part !== '');
+const getPathParts = filepath => filepath.split(path.sep).filter(part => part !== '');
 
 export default class {
   constructor() {
